@@ -9,8 +9,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/api", (req, res) => {
-  res.json({ message: "Hello from the API!" });
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome.! This is Home Route!" });
 });
 
 app.get("/api/news", async (req, res) => {
