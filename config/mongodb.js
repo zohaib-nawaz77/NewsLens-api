@@ -1,14 +1,12 @@
 const mongoose = require("mongoose");
-// require("dotenv").config();
+require("dotenv").config();
 
 // const mongoUrl = process.env.MONGO_URI;
 // "mongodb://127.0.0.1:27017/starterX"
 
 async function connectDB() {
   try {
-    await mongoose.connect(
-      "mongodb+srv://zohaib751534:Ba8QRvK0VPcKi1DQ@cluster0.fqgvs.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-    );
+    await mongoose.connect(process.env.MONGO_URI, {});
     console.log("Connected to Database successfully");
   } catch (err) {
     console.log("Error connecting to the database:", err.message);
