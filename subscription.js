@@ -40,12 +40,16 @@ module.exports.sendWelcomeEmail = (email) => {
                         </html>`,
   };
 
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      console.error("Error sending welcome email:", err);
-    } else {
-      console.log("Welcome email sent:", info.response);
-    }
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.error("Error sending welcome email:", err);
+        reject(err);
+      } else {
+        console.log("Welcome email sent:", info.response);
+        resolve(info);
+      }
+    });
   });
 };
 
