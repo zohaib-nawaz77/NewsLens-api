@@ -66,8 +66,8 @@ app.post("/subscribe", async (req, res) => {
 try {
   nodeCron.schedule(
     // "40 9 * * *",
-    // "*/15 * * * * *", // Runs every 15 seconds
-    "0 0 9,18 * * *", // Runs at 9:00 AM and 6:00 PM daily
+    "*/15 * * * * *", // Runs every 15 seconds
+    // "0 0 9,18 * * *", // Runs at 9:00 AM and 6:00 PM daily
     () => {
       console.log("Sending daily news...");
       sendDailyNews();
