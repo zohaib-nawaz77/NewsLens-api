@@ -55,7 +55,7 @@ app.post("/subscribe", async (req, res) => {
 
     const newSubscriber = new Subscriber({ email });
     await newSubscriber.save();
-    sendWelcomeEmail(email);
+    await sendWelcomeEmail(email);
     res.json({ message: "You have subscribed successfully!", email });
   } catch (error) {
     console.error("Error handling subscription:", error);
