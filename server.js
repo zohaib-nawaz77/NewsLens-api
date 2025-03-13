@@ -1,10 +1,8 @@
-// server.js
 const express = require("express");
 const app = express();
 const axios = require("axios");
-const nodeCron = require("node-cron");
 const Subscriber = require("./model/subscriber");
-const { sendWelcomeEmail, sendDailyNews } = require("./subscription");
+const { sendWelcomeEmail } = require("./subscription");
 const cors = require("cors");
 require("./config/mongodb");
 require("dotenv").config();
@@ -33,7 +31,6 @@ app.get("/api/news", async (req, res) => {
       },
     });
     res.json(data.articles);
-    // console.log(data.articles);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -42,7 +39,6 @@ app.get("/api/news", async (req, res) => {
 app.post("/subscribe", async (req, res) => {
   try {
     const { email } = req.body;
-    console.log(email);
     if (!email) {
       res.status(400).json({ message: "Email is required" });
       return;
@@ -63,22 +59,4 @@ app.post("/subscribe", async (req, res) => {
   }
 });
 
-try {
-  nodeCron.schedule(
-    // "40 9 * * *",
-    // "*/15 * * * * *", // Runs every 15 seconds
-    "0 0 9,18 * * *", // Runs at 9:00 AM and 6:00 PM daily
-    () => {
-      console.log("Sending daily news...");
-      sendDailyNews();
-    },
-    {
-      scheduled: true,
-      timezone: "Asia/Kolkata",
-    }
-  );
-} catch (error) {
-  console.log("Internal error from subscription", error);
-}
-
-app.listen(3001, () => console.log("Proxy server running on port 3001"));
+module.exports = app; // Export for Vercel serverless function
