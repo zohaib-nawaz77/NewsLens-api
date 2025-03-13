@@ -2,7 +2,7 @@
 const express = require("express");
 const app = express();
 const axios = require("axios");
-const nodeCron = require("node-cron");
+// const nodeCron = require("node-cron");
 const Subscriber = require("./model/subscriber");
 const { sendWelcomeEmail, sendDailyNews } = require("./subscription");
 const cors = require("cors");
@@ -66,7 +66,6 @@ app.post("/subscribe", async (req, res) => {
 // Add a dedicated endpoint for the cron job
 app.get("/api/daily-news", async (req, res) => {
   try {
-    const { sendDailyNews } = require("./subscription");
     await sendDailyNews();
     res.status(200).json({ message: "Daily news sent successfully" });
   } catch (error) {
@@ -74,5 +73,23 @@ app.get("/api/daily-news", async (req, res) => {
     res.status(500).json({ error: "Failed to send daily news" });
   }
 });
+
+// try {
+//   nodeCron.schedule(
+//     // "40 9 * * *",
+//     // "*/15 * * * * *", // Runs every 15 seconds
+//     "0 0 9,18 * * *", // Runs at 9:00 AM and 6:00 PM daily
+//     () => {
+//       console.log("Sending daily news...");
+//       sendDailyNews();
+//     },
+//     {
+//       scheduled: true,
+//       timezone: "Asia/Kolkata",
+//     }
+//   );
+// } catch (error) {
+//   console.log("Internal error from subscription", error);
+// }
 
 app.listen(3001, () => console.log("Proxy server running on port 3001"));
