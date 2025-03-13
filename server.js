@@ -1,8 +1,10 @@
+// server.js
 const express = require("express");
 const app = express();
 const axios = require("axios");
+const nodeCron = require("node-cron");
 const Subscriber = require("./model/subscriber");
-const { sendWelcomeEmail } = require("./subscription");
+const { sendWelcomeEmail, sendDailyNews } = require("./subscription");
 const cors = require("cors");
 require("./config/mongodb");
 require("dotenv").config();
@@ -31,6 +33,7 @@ app.get("/api/news", async (req, res) => {
       },
     });
     res.json(data.articles);
+    // console.log(data.articles);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -39,6 +42,7 @@ app.get("/api/news", async (req, res) => {
 app.post("/subscribe", async (req, res) => {
   try {
     const { email } = req.body;
+    console.log(email);
     if (!email) {
       res.status(400).json({ message: "Email is required" });
       return;
@@ -59,4 +63,16 @@ app.post("/subscribe", async (req, res) => {
   }
 });
 
-module.exports = app; // Export for Vercel serverless function
+// Add a dedicated endpoint for the cron job
+app.get("/api/daily-news", async (req, res) => {
+  try {
+    const { sendDailyNews } = require("./subscription");
+    await sendDailyNews();
+    res.status(200).json({ message: "Daily news sent successfully" });
+  } catch (error) {
+    console.error("Error in daily news endpoint:", error);
+    res.status(500).json({ error: "Failed to send daily news" });
+  }
+});
+
+app.listen(3001, () => console.log("Proxy server running on port 3001"));
