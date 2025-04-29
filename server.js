@@ -9,9 +9,12 @@ const cors = require("cors");
 require("./config/mongodb");
 require("dotenv").config();
 
+
+
+
 app.use(
   cors({
-    origin: "https://the-news-lens.vercel.app",
+    origin: ["https://the-news-lens.vercel.app", "http://localhost:5173"],
   })
 );
 
