@@ -1,3 +1,4 @@
+// googleStrategy.js
 const passport = require("passport");
 const dotenv = require("dotenv");
 const userModel = require("../models/user.model");
@@ -24,20 +25,26 @@ passport.use(
           });
         }
         console.log(user);
-        cb(null, user);
+        return cb(null, user);
       } catch (err) {
-        cb(err, null);
+        console.error("Google Strategy Error:", err);
+        return cb(err, null);
       }
     }
   )
 );
 
 passport.serializeUser((user, cb) => {
-  cb(null, user.id);
+  cb(null, user._id); // Use _id instead of id for MongoDB
 });
 
-passport.deserializeUser((user, cb) => {
-  cb(null, user);
+passport.deserializeUser(async (id, cb) => {
+  try {
+    const user = await userModel.findById(id);
+    cb(null, user);
+  } catch (err) {
+    cb(err, null);
+  }
 });
 
-// module.exports = passport;
+module.exports = passport;
