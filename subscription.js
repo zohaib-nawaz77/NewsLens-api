@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 const axios = require("axios");
-const Subscriber = require("./model/subscriber");
+const Subscriber = require("./models/subscriber");
 require("dotenv").config();
 
 // Replace these with your actual Gmail credentials

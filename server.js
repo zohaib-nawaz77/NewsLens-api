@@ -2,15 +2,16 @@
 const express = require("express");
 const app = express();
 const axios = require("axios");
+const passport = require("passport");
+// nodecron only works in development you will have to use a web service like jobcron to invoke mail link in production to send emails at a specific time
 // const nodeCron = require("node-cron");
-const Subscriber = require("./model/subscriber");
+const expressSession = require("express-session");
+const googleStrategy = require("./config/googleStrategy");
+const Subscriber = require("./models/subscriber");
 const { sendWelcomeEmail, sendDailyNews } = require("./subscription");
 const cors = require("cors");
 require("./config/mongodb");
 require("dotenv").config();
-
-
-
 
 app.use(
   cors({
@@ -20,10 +21,26 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(
+  expressSession({
+    secret: process.env.EXPRESS_SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome.! This is Home Route!" });
 });
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+const authRoutes = require("./routes/auth.routes");
+const userRoutes = require("./routes/user.routes");
+
+app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 
 app.get("/api/news", async (req, res) => {
   try {
