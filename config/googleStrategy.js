@@ -23,6 +23,7 @@ passport.use(
             profilePicture: profile.photos[0].value,
           });
         }
+        console.log(user);
         cb(null, user);
       } catch (err) {
         cb(err, null);
