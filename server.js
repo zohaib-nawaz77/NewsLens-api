@@ -16,6 +16,7 @@ require("dotenv").config();
 app.use(
   cors({
     origin: ["https://the-news-lens.vercel.app", "http://localhost:5173"],
+    credentials: true, // Allow credentials (cookies, authorization headers, etc.)
   })
 );
 
